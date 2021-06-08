@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Podcast Player</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+
+  <ion-list *ngIf="files.length">
+    <ion-list-header>Podcast</ion-list-header>
+    <ng-container *ngFor="let file of files; let i = index">
+      <ion-item (click)="openFile(file, i)" >
+        <p><ion-icon color="primary" slot="start" name="musical-note"></ion-icon>{{ file.name }}</p>
+        <p slot="end" *ngIf="currentFile.index === i">
+          <ion-icon *ngIf="fileplay" color="primary" name="pause"></ion-icon>
+          <ion-icon *ngIf="!fileplay" color="primary" name="play"></ion-icon>
+        </p>
+        <p slot="end" *ngIf="currentFile.index !== i"><ion-icon name="play" color="primary"></ion-icon></p>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+</ion-content>
+
+<ion-footer *ngIf="currentFile.file" [@showHide]="displayFooter">
+  <ion-toolbar color="success">
+    <ion-grid>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="2">
+          <ion-label color="light" style="font-size: 12px;">{{ res.time }}</ion-label>
+        </ion-col>
+
+        <ion-col size="8">
+          <ion-range min="0" color="light" [max]="res.durationSec" [formControl]="seekbar" (mouseup)="onSeekEnd()" (touchend)="onSeekEnd()"
+            name="seekbar">
+          </ion-range>
+        </ion-col>
+
+        <ion-col size="2">
+          <ion-label color="light" style="font-size: 12px;">{{ res.duration }}</ion-label>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+
+  <ion-toolbar color="dark" padding>
+    <ion-grid>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="3">
+          <ion-button fill = "clear"  [disabled]="isFirstPlaying()" (click)="previous()">
+            <ion-icon color="primary" name="play-skip-back-circle-outline"> </ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col size="5" offset="1">
+          <ion-button fill = "clear"   *ngIf="!playing" (click)="play()">
+            <ion-icon color="primary" name="play"></ion-icon>
+          </ion-button>
+          <ion-button fill = "clear"  *ngIf="!!playing" (click)="pause()">
+            <ion-icon color="primary" name="pause"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button fill = "clear"  [disabled]="isLastPlaying()" (click)="next()">
+            <ion-icon color="primary" name="play-skip-forward-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+ </ion-footer>
